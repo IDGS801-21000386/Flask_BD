@@ -1,0 +1,38 @@
+{%extends "layout2.html"%}
+
+{%block container%}
+{%import "_macros.html" as macros %}
+
+<h1>HOLA DESDE ALUMNOS 2!!!</h1>
+<form action="" method="POST" novalidate>
+    <div class="row control-group">
+        <div class="form-group col-xs-12 floating-label-form-group ontrols">
+            {{macros.camposNuevos(form.nombre, class="form-control")}}
+        </div>
+    </div>
+
+    <div class="row control-group">
+        <div class="form-group col-xs-12 floating-label-form-group ontrols">
+            {{macros.camposNuevos(form.apaterno, class="form-control")}}
+        </div>
+    </div>
+
+    <div class="row control-group">
+        <div class="form-group col-xs-12 floating-label-form-group ontrols">
+            {{macros.camposNuevos(form.amaterno, class="form-control")}}
+        </div>
+    </div>
+
+    <div class="row control-group">
+        <div class="form-group col-xs-12 floating-label-form-group ontrols">
+            {{macros.camposNuevos(form.edad, class="form-control")}}
+        </div>
+    </div>
+
+    <input type="submit" id="btn1" name="btn1" value="Registrar">
+</form>
+
+<h1>Nombre: {{nom}}</h1>
+<h2>Apellido Paterno: {{apa}}</h2>
+<h2>Apellido Materno: {{ama}}</h2>
+{%endblock%}
