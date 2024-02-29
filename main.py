@@ -23,6 +23,32 @@ app.secret_key = "1234"
 def page_not_found(e):
     return render_template('404.html')
 
+@app.route("/ABC_Completo", methods=['GET', 'POST'])
+def ABC_Completo():
+    alum_form = forms.UserForm2(request.form)
+    alumno = Alumnos.query.all()
+    return render_template("ABC_Completo.html", alumno = alumno)
+
+@app.route("/eliminar", methods=['GET', 'POST'])
+def eliminar():
+    create_form = forms.UserForm2(request.form)
+    if request.method == "GET":
+        id = request.args.get("id")
+        # SELECT * FROM alumnos WHERE id = id
+        alumn1 = db.session.query(Alumnos).filter(Alumnos.id == id).first
+        create_form.id.data = request.args.get("id")
+        create_form.nombre.data = alumn1.nombre
+        create_form.apaterno.data = alumn1.apaterno
+        create_form.email.data = alumn1.email
+    if request.method == "POST":
+        id = create_form.id.data
+        alum = Alumnos.query.get(id)
+        # DELETE FROM alumnos WHERE id = id
+        db.session.delete(alumn1)
+        db.session.commit()
+    return render_template("index.html", form = create_form)
+
+
 @app.route("/index", methods=['GET', 'POST'])
 def index():
     create_form = forms.UserForm2(request.form)
@@ -33,7 +59,7 @@ def index():
                     )
         db.session.add(alum)
         db.session.commit()
-    return render_template("index.html", form=create_form)
+    return render_template("index.html", form = create_form)
 
 #@app.route("/ABC_Completo", methods=['GET', 'POST'])
 #def ABC_Completo():
