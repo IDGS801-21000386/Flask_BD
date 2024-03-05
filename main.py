@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from flask import flash
 from flask_wtf.csrf import CSRFProtect
 
@@ -8,8 +8,6 @@ from forms import UserForm
 from  models import db
 from  models import Alumnos
 import forms 
-
-
 
 # Crear una instancia de la clase Flask
 app = Flask(__name__)
@@ -35,7 +33,7 @@ def eliminar():
     if request.method == "GET":
         id = request.args.get("id")
         # SELECT * FROM alumnos WHERE id = id
-        alumn1 = db.session.query(Alumnos).filter(Alumnos.id == id).first
+        alumn1 = db.session.query(Alumnos).filter(Alumnos.id == id).first()
         create_form.id.data = request.args.get("id")
         create_form.nombre.data = alumn1.nombre
         create_form.apaterno.data = alumn1.apaterno
@@ -44,9 +42,33 @@ def eliminar():
         id = create_form.id.data
         alum = Alumnos.query.get(id)
         # DELETE FROM alumnos WHERE id = id
-        db.session.delete(alumn1)
+        db.session.delete(alum)
         db.session.commit()
-    return render_template("index.html", form = create_form)
+        return redirect(url_for("ABC_Completo"))
+    return render_template("eliminar.html", form = create_form)
+
+@app.route("/modificar", methods=['GET', 'POST'])
+def modificar():
+    create_form = forms.UserForm2(request.form)
+    if request.method == "GET":
+        id = request.args.get("id")
+        # SELECT * FROM alumnos WHERE id = id
+        alumn1 = db.session.query(Alumnos).filter(Alumnos.id == id).first()
+        create_form.id.data = request.args.get("id")
+        create_form.nombre.data = alumn1.nombre
+        create_form.apaterno.data = alumn1.apaterno
+        create_form.email.data = alumn1.email
+    if request.method == "POST":
+        id = create_form.id.data
+        alumn1 = db.session.query(Alumnos).filter(Alumnos.id == id).first()
+        alumn1.nombre = create_form.nombre.data
+        alumn1.apaterno = create_form.apaterno.data
+        alumn1.email = create_form.email.data
+        # DELETE FROM alumnos WHERE id = id
+        db.session.add(alumn1)
+        db.session.commit()
+        return redirect(url_for("ABC_Completo"))
+    return render_template("modificar.html", form = create_form)
 
 
 @app.route("/index", methods=['GET', 'POST'])
